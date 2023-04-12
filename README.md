@@ -1,6 +1,14 @@
-# Breast cancer detection (ANN)
+# ANN Code Practice: Breast cancer detection 
+### Last updated: April 2023
+### Platform: Juypter notebook (python)
 
-## If using google colab, don't miss this step!
+#### Aim: To develop an ANN for binary breast cancer classification (malignant or benign) using a breast cancer database featuring several input features computed from digital images. Our simple ANN model has 1 hidden layers, 2 outputs with softmax and 30 input features.
+
+#### A breast cancer dataset from Wisconsin University is used. The breast cancer dataset contains 569 samples and 30 features computed from digital images. The full 30 features: ['mean radius' 'mean texture' 'mean perimeter' 'mean area' 'mean smoothness' 'mean compactness' 'mean concavity' 'mean concave points' 'mean symmetry' 'mean fractal dimension' 'radius error' 'texture error' 'perimeter error' 'area error' 'smoothness error' 'compactness error' 'concavity error' 'concave points error' 'symmetry error' 'fractal dimension error' 'worst radius' 'worst texture' 'worst perimeter' 'worst area' 'worst smoothness' 'worst compactness' 'worst concavity' 'worst concave points' 'worst symmetry' 'worst fractal dimension']
+
+![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+
+### If you are using google colab, don't miss this step!
 ```
 from google.colab import drive
 drive.mount('/content/drive')
@@ -114,3 +122,68 @@ plt.xlabel('Number of features', fontsize = 12)
 plt.show()
 ```
 
+# Additional steps to evaluate model performance
+## 1. Confusion Matrix is a performance measurement for machine learning classification problem, where output can be two or more classes.
+### Note: this code is applicable to one trained ANN model (not the looping situation above) 
+
+#### Import packages
+```
+import seaborn as sns
+import matplotlib.pyplot as plt     
+```
+#### Compute confusion matrix (cm) to evaluate the accuracy of a classification.
+```
+#cm inputs y_test and y_pred
+#argmax decodes the np array, because confusion matrix only takes in row vector
+cm = confusion_matrix(y_test.argmax(axis=1), y_pred.argmax(axis=1))
+print(cm)
+```
+
+#### Calculate the confusion matrix using Matplotlib
+```
+fig, ax = plt.subplots(figsize=(5, 5))
+ax.matshow(cm, cmap=plt.cm.Oranges, alpha=0.3)
+for i in range(cm.shape[0]):
+    for j in range(cm.shape[1]):
+        ax.text(x=j, y=i,s=cm[i, j], va='center', ha='center', size='xx-large')
+```
+#### Add features to the confusion matrix plot
+```
+plt.title('Confusion matrix representing y predictions vs y actuals on test data (30 features)', fontsize=12)
+plt.xlabel('Predictions', fontsize=12)
+plt.ylabel('Actuals', fontsize=12)
+plt.show()
+```
+## 2. Classification report (accuracy_score, f1_score, precision_score, recall_score)
+
+### Import relavent libraries 
+```
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, classification_report, confusion_matrix
+```
+
+### Print scores
+```
+print("Precision Score: ", precision_score(y_test, y_pred, average="macro")) #Precision Score = TP / (FP + TP)
+print("Recall Score: ", recall_score(y_test, y_pred, average="macro")) #Recall Score = TP / (FN + TP)
+print("Accuracy Score: ", accuracy_score(y_test, y_pred)) #Accuracy Score = (TP + TN)/ (TP + FN + TN + FP)
+print("F1 Score: ", f1_score(y_test, y_pred, average="macro")) #F1 = 2 *((Precision * Sensitivity)/(Precision + Sensitivity))
+```
+
+## 3. To check the softmax output from ANN model and get class label
+
+### Softmax output
+```
+check_sum = y_ANN_output[0]
+print("y_ANN_output: ", y_ANN_output, "or", np.round(y_ANN_output))
+print('check_sum = ',check_sum[0]+check_sum[1])
+```
+### To get the class label from Y_test
+```
+y_ref_result = y_test[0].argmax().item()
+print('y_ref_result = ',y_ref_result)
+```
+### To get the class label from ANN
+```
+y_ANN_result = y_ANN_output.argmax().item()
+print('y_ANN_result = ',y_ANN_result)
+```
